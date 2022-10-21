@@ -1,46 +1,33 @@
 <?php
-$insert = false;
-if(isset($_POST['Name'])){  
-
-
 $server = "localhost";
 $username = "root";
 $password = "";
+$database = "kutch_trip_form";
 
-$con = mysqli_connect($server,$username,$password);
+$con = mysqli_connect($server,$username,$password,$database);
 
-if(!$con) {
-die("Connect to this database failed due to" . mysqli_connect_error());
-
-
-
+if(!$con){
+die("Connection to this database failed due to" . mysqli_connect_error());
 }
-// echo "Alhamdulillah";
+// echo "Success connecting to the db";
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+$Name= $_POST['Name'];
+$Gender= $_POST['Gender'];
+$Age= $_POST['Age'];
+$Email= $_POST['Email'];
+$PhoneNumber= $_POST['PhoneNumber'];
+$Other= $_POST['Other'];
 
-
-$name = $_POST['Name'];
-$gender = $_POST['Gender'];
-$age = $_POST['Age'];
-$email = $_POST['Email'];
-$phonenumber = $_POST['Phone number'];
-$desk = $_POST['desk'];
-
-$sql = "INSERT INTO `kutch trip`.`trip` (`Name`, `Age`, `Gender`, `Email`, `Phone Number`, `Other`, `Date`) VALUES ('$name', '$age', '$gender', '$email', '$phonenumber', '$desk', CURRENT_TIMESTAMP());";
-
+$sql = "INSERT INTO `kutch_trip_form` . `trip` (`Name`, `Gender`, `Age`, `Email`, `PhoneNumber`, `Other`, `Date`) VALUES ('$Name', '$Gender', '$Age', '$Email', '$PhoneNumber', '$Other', CURRENT_TIMESTAMP);";
+$result = mysqli_query($con,$sql);
 // echo $sql;
 
-if($con->query($sql) == true){
-
-    // echo "Successfully inserted";
-    $insert = true;
+if($result){
+  echo "<p class='submitMsg'>Thanks for submitting your form. We are happy to see you joining us for the trip</p>";
 }
-
-else {
-echo "ERROR: $sql <br> $con->error ";
-
+else{
+  echo "The record was not inserted Successfully because of this error ---> ". mysqli_error($con);
 }
-
-$con->close();
 }
 ?>
 
@@ -64,23 +51,18 @@ $con->close();
   <div class="container">
     <h1>Welcome to SDCDE Kutch Travel Form</h1>
     <p>Enter Your details and submit this form to confirm your participation in the trip</p>
-    <?php 
-    if ($insert == true) {
-    echo "<p class='SubmitMsg'>Thanks for Submitting your form. <br>We are happy to see you joining us for the Kutch trip</p>"; } ?> 
-    <form action="index.php" method="post">
-      <input type="text" name="name" id="name" placeholder="Enter Your Name">
-      <input type="text" name="age" id="age" placeholder="Enter Your Age">
-      <input type="text" name="gender" id="gender" placeholder="Enter Your Gender">
-      <input type="text" name="Email" id="Email" placeholder="Enter Your Email">
-      <input type="text" name="Phone Number" id="Phone Number" placeholder="Enter Your Phone Number">
-      <textarea name="desk" id="desk" cols="30" rows="10" placeholder="Enter any other information here"></textarea>
+
+    <form action="/git/Travel-Website/index.php" method="post">
+      <input type="text" name="Name" id="Name" placeholder="Enter Your Name">
+      <input type="text" name="Age" id="Age" placeholder="Enter Your Age">
+      <input type="text" name="Gender" id="Gender" placeholder="Enter Your Gender">
+      <input type="Email" name="Email" id="Email" placeholder="Enter Your Email">
+      <input type="PhoneNumber" name="PhoneNumber" id="PhoneNumber" placeholder="Enter Your Phone Number">
+      <textarea name="Other" id="Other" cols="30" rows="10" placeholder="Enter any other information here"></textarea>
       <button class="btn">Submit</button>
       <!-- <button class="btn">Reset</button>  -->
     </form>
   </div>
-
-  <script src="index.js"></script>
-  
 </body>
 
 </html>
